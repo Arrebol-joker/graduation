@@ -119,6 +119,7 @@
                      icon="SuccessFilled" @click="focusNews(scope.row)">
             设置为焦点新闻
           </el-button>
+          <el-button link type="primary" icon="ChatDotRound" @click="handleComment(scope.row)">评论</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -228,11 +229,53 @@
         </div>
       </template>
     </vxe-modal>
+
+    <vxe-modal title="评论管理" v-model="commentOpen" width="60%" show-maximize showFooter resize>
+      <div style="margin-bottom: 20px;">
+        <el-input
+            v-model="commentContent"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入评论内容"
+        />
+        <el-button type="primary" style="margin-top: 10px;" @click="submitComment">发表评论</el-button>
+      </div>
+      <el-divider/>
+      <div v-if="commentList.length === 0" style="text-align: center; color: #999; padding: 20px;">
+        暂无评论，快来发表第一条评论吧！
+      </div>
+      <div v-for="(item, index) in commentList" :key="index" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+          <el-avatar :size="36" :src="item.avatar" style="margin-right: 10px;">
+            <span>{{ item.nickName ? item.nickName.charAt(0) : '用' }}</span>
+          </el-avatar>
+          <div>
+            <div style="font-weight: bold; font-size: 14px;">{{ item.nickName || '匿名用户' }}</div>
+            <div style="font-size: 12px; color: #999;">{{ item.createTime }}</div>
+          </div>
+          <el-button
+              link
+              type="danger"
+              icon="Delete"
+              style="margin-left: auto;"
+              @click="handleDeleteComment(item)"
+          >删除</el-button>
+        </div>
+        <div style="padding-left: 46px; font-size: 14px; line-height: 1.6;">{{ item.content }}</div>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="commentOpen = false">关 闭</el-button>
+        </div>
+      </template>
+    </vxe-modal>
+
   </div>
 </template>
 
 <script setup name="News">
 import {listNews, getNews, delNews, addNews, updateNews, setAsFocusNews} from "@/api/ich/news"
+import {getCommentsByTargetId, addComment, delComment} from "@/api/ich/comment"
 import {getToken} from "@/utils/auth.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 
@@ -251,6 +294,11 @@ const multiple = ref(true)
 const total = ref(0)
 const title = ref("")
 const selectedRow = ref(null)
+
+const commentOpen = ref(false)
+const commentList = ref([])
+const commentContent = ref("")
+const currentTargetId = ref("")
 
 const data = reactive({
   form: {},
@@ -299,6 +347,48 @@ const data = reactive({
 const {queryParams, form, rules, upload} = toRefs(data)
 
 
+
+/** 评论按钮操作 */
+const handleComment = (row) => {
+  currentTargetId.value = row.newsId
+  commentContent.value = ""
+  commentOpen.value = true
+  getCommentsByTargetId(row.newsId).then(response => {
+    commentList.value = response.data
+  })
+}
+
+/** 提交评论 */
+const submitComment = () => {
+  if (!commentContent.value || !commentContent.value.trim()) {
+    proxy.$modal.msgWarning("请输入评论内容")
+    return
+  }
+  addComment({
+    content: commentContent.value,
+    targetId: currentTargetId.value,
+    targetType: "news"
+  }).then(() => {
+    proxy.$modal.msgSuccess("评论成功")
+    commentContent.value = ""
+    getCommentsByTargetId(currentTargetId.value).then(response => {
+      commentList.value = response.data
+    })
+  })
+}
+
+/** 删除评论 */
+const handleDeleteComment = (item) => {
+  proxy.$modal.confirm('是否确认删除该评论？').then(function () {
+    return delComment(item.commentId)
+  }).then(() => {
+    getCommentsByTargetId(currentTargetId.value).then(response => {
+      commentList.value = response.data
+    })
+    proxy.$modal.msgSuccess("删除成功")
+  }).catch(() => {
+  })
+}
 
 //设置为焦点新闻
 const focusNews = (row) => {

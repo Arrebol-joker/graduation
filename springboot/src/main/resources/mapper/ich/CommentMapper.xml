@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fast.ich.mapper.CommentMapper">
+
+    <resultMap type="Comment" id="CommentResult">
+        <result property="commentId"    column="comment_id"    />
+        <result property="content"    column="content"    />
+        <result property="targetId"    column="target_id"    />
+        <result property="targetType"    column="target_type"    />
+        <result property="userId"    column="user_id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
+        select comment_id, content, target_id, target_type, user_id, nick_name, avatar, create_time from comment
+        <where>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="targetId != null  and targetId != ''"> and target_id = #{targetId}</if>
+            <if test="targetType != null  and targetType != ''"> and target_type = #{targetType}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectCommentByCommentId" parameterType="String" resultMap="CommentResult">
+        select comment_id, content, target_id, target_type, user_id, nick_name, avatar, create_time from comment
+        where comment_id = #{commentId}
+    </select>
+
+    <select id="selectCommentByTargetId" parameterType="String" resultMap="CommentResult">
+        select comment_id, content, target_id, target_type, user_id, nick_name, avatar, create_time from comment
+        where target_id = #{targetId}
+        order by create_time desc
+    </select>
+
+    <insert id="insertComment" parameterType="Comment">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentId != null">comment_id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="targetId != null and targetId != ''">target_id,</if>
+            <if test="targetType != null and targetType != ''">target_type,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="avatar != null and avatar != ''">avatar,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commentId != null">#{commentId},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="targetId != null and targetId != ''">#{targetId},</if>
+            <if test="targetType != null and targetType != ''">#{targetType},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="avatar != null and avatar != ''">#{avatar},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComment" parameterType="Comment">
+        update comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="targetId != null and targetId != ''">target_id = #{targetId},</if>
+            <if test="targetType != null and targetType != ''">target_type = #{targetType},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteCommentByCommentId" parameterType="String">
+        delete from comment where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteCommentByCommentIds" parameterType="String">
+        delete from comment where comment_id in
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+</mapper>
