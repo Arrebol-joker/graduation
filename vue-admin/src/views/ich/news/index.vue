@@ -275,7 +275,7 @@
 
 <script setup name="News">
 import {listNews, getNews, delNews, addNews, updateNews, setAsFocusNews} from "@/api/ich/news"
-import {getCommentsByTargetId, addComment, delComment} from "@/api/ich/comment"
+import {listComment, addComment, delComment} from "@/api/ich/comment"
 import {getToken} from "@/utils/auth.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 
@@ -353,7 +353,7 @@ const handleComment = (row) => {
   currentTargetId.value = row.newsId
   commentContent.value = ""
   commentOpen.value = true
-  getCommentsByTargetId(row.newsId).then(response => {
+  listComment(row.newsId, 2).then(response => {
     commentList.value = response.data
   })
 }
@@ -367,11 +367,11 @@ const submitComment = () => {
   addComment({
     content: commentContent.value,
     targetId: currentTargetId.value,
-    targetType: "news"
+    type: 2
   }).then(() => {
     proxy.$modal.msgSuccess("评论成功")
     commentContent.value = ""
-    getCommentsByTargetId(currentTargetId.value).then(response => {
+    listComment(currentTargetId.value, 2).then(response => {
       commentList.value = response.data
     })
   })
@@ -380,9 +380,9 @@ const submitComment = () => {
 /** 删除评论 */
 const handleDeleteComment = (item) => {
   proxy.$modal.confirm('是否确认删除该评论？').then(function () {
-    return delComment(item.commentId)
+    return delComment(item.id)
   }).then(() => {
-    getCommentsByTargetId(currentTargetId.value).then(response => {
+    listComment(currentTargetId.value, 2).then(response => {
       commentList.value = response.data
     })
     proxy.$modal.msgSuccess("删除成功")

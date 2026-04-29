@@ -68,6 +68,11 @@ export const constantRoutes = [
             hidden: true,
           },
           {
+            path: 'event',
+            component: () => import('@/views/HomePage/event'),
+            hidden: true,
+          },
+          {
             path: 'newsDetail/:id',
             component: () => import('@/views/HomePage/newsDetail'),
             hidden: true,
@@ -80,6 +85,11 @@ export const constantRoutes = [
           {
             path: 'projects',
             component: () => import('@/views/HomePage/projects'),
+            hidden: true,
+          },
+          {
+            path: 'heritageManage',
+            component: () => import('@/views/HomePage/heritageManage'),
             hidden: true,
           },
           {

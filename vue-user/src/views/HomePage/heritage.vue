@@ -5,6 +5,23 @@
     <div class="section-container">
       <!-- 筛选器容器 -->
       <div class="filter-container">
+        <!-- 搜索栏 -->
+        <div class="search-bar">
+          <el-input
+              v-model="keyword"
+              placeholder="搜索非遗项目..."
+              clearable
+              class="search-input"
+              @keyup.enter="handleSearch"
+          >
+            <template #prefix>
+              <el-icon><Search/></el-icon>
+            </template>
+          </el-input>
+          <el-button type="primary" class="search-btn" @click="handleSearch">搜索</el-button>
+          <el-button class="reset-btn" @click="handleReset">重置</el-button>
+        </div>
+        <!-- 分类筛选器 -->
         <div class="category-filter">
           <!-- 分类按钮 -->
           <el-button @click="setActiveCategory('')"
@@ -77,18 +94,22 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {listHeritage, selectOnlyCategories} from "@/api/ich/heritage.js";
-import {LocationFilled} from "@element-plus/icons-vue";
+import {LocationFilled, Search} from "@element-plus/icons-vue";
 import {useRouter} from "vue-router";
 import {getImageUrl} from "@/utils/validate";
 
 //当前激活的类别
 const activeCategory = ref('')
 
+//关键词
+const keyword = ref('')
+
 //查询参数
 const query = ref({
   pageNum: 1,
   pageSize: 30,
   category: null,
+  heritageStatus: '2',
 })
 
 //基础URL地址
@@ -106,26 +127,40 @@ const onlyCategories = ref([])
 //根据类别进行条件查询
 const setActiveCategory = (category) => {
   activeCategory.value = category
-  if (category === '') {
-    query.value = {
-      pageNum: 1,
-      pageSize: 30,
-      category: null,
-    }
-    getList()
-  } else {
-    query.value = {
-      pageNum: 1,
-      pageSize: 30,
-      category: category,
-    }
-    getList()
-  }
+  query.value.pageNum = 1
+  query.value.category = category || null
+  getList()
+}
+
+//搜索
+const handleSearch = () => {
+  activeCategory.value = ''
+  query.value.pageNum = 1
+  query.value.pageSize = 30
+  query.value.category = null
+  query.value.heritageStatus = '2'
+  query.value.keyword = keyword.value
+  getList()
+}
+
+//重置
+const handleReset = () => {
+  keyword.value = ''
+  activeCategory.value = ''
+  query.value.keyword = null
+  query.value.pageNum = 1
+  query.value.pageSize = 30
+  query.value.category = null
+  query.value.heritageStatus = '2'
+  getList()
 }
 
 //查询数据
 const getList = () => {
-  listHeritage(query.value).then(res => {
+  listHeritage({
+    ...query.value,
+    _t: Date.now()
+  }).then(res => {
     heritageList.value = res.rows
     total.value = res.total
   })
@@ -162,12 +197,40 @@ onMounted(() => {
   padding: 0 20px 40px; /* 内边距：上 0，左右 20px，下 40px */
 }
 
-/* 筛选器容器样式 */
-.filter-container {
-  padding: 25px; /* 内边距 */
-  background: #f8f9fa; /* 浅灰色背景 */
-  border-bottom: 1px solid #e9ecef; /* 底部边框 */
-}
+/* 搜索栏样式 */
+  .search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .search-input {
+    width: 400px;
+  }
+
+  .search-input :deep(.el-input__wrapper) {
+    border-radius: 30px;
+    padding-left: 20px;
+  }
+
+  .search-btn {
+    border-radius: 30px !important;
+    padding: 8px 24px !important;
+  }
+
+  .reset-btn {
+    border-radius: 30px !important;
+    padding: 8px 24px !important;
+  }
+
+  /* 筛选器容器样式 */
+  .filter-container {
+    padding: 25px; /* 内边距 */
+    background: #f8f9fa; /* 浅灰色背景 */
+    border-bottom: 1px solid #e9ecef; /* 底部边框 */
+  }
 
 /* 分类筛选器布局 */
 .category-filter {

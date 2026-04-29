@@ -5,83 +5,73 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.fast.ich.mapper.CommentMapper">
 
     <resultMap type="Comment" id="CommentResult">
-        <result property="commentId"    column="comment_id"    />
-        <result property="content"    column="content"    />
-        <result property="targetId"    column="target_id"    />
-        <result property="targetType"    column="target_type"    />
-        <result property="userId"    column="user_id"    />
-        <result property="nickName"    column="nick_name"    />
-        <result property="avatar"    column="avatar"    />
-        <result property="createTime"    column="create_time"    />
+        <result property="id"         column="id"          />
+        <result property="content"    column="content"     />
+        <result property="userId"     column="user_id"     />
+        <result property="targetId"   column="target_id"   />
+        <result property="type"       column="type"        />
+        <result property="nickName"   column="nick_name"   />
+        <result property="createTime" column="create_time" />
+        <result property="targetName" column="target_name" />
     </resultMap>
 
-    <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
-        select comment_id, content, target_id, target_type, user_id, nick_name, avatar, create_time from comment
+    <select id="selectCommentList" resultMap="CommentResult">
+        select id, content, user_id, target_id, type, nick_name, create_time from ich_comment
         <where>
-            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
-            <if test="targetId != null  and targetId != ''"> and target_id = #{targetId}</if>
-            <if test="targetType != null  and targetType != ''"> and target_type = #{targetType}</if>
-            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="targetId != null and targetId != ''"> and target_id = #{targetId}</if>
+            <if test="type != null"> and type = #{type}</if>
         </where>
         order by create_time desc
     </select>
 
-    <select id="selectCommentByCommentId" parameterType="String" resultMap="CommentResult">
-        select comment_id, content, target_id, target_type, user_id, nick_name, avatar, create_time from comment
-        where comment_id = #{commentId}
+    <select id="selectCommentPage" parameterType="Comment" resultMap="CommentResult">
+        select c.id, c.content, c.user_id, c.target_id, c.type, c.nick_name, c.create_time,
+            case when c.type = 1 then h.title when c.type = 2 then n.title end as target_name
+        from ich_comment c
+        left join heritage h on c.type = 1 and c.target_id = h.heritage_id
+        left join news n on c.type = 2 and c.target_id = n.news_id
+        <where>
+            <if test="content != null and content != ''"> and c.content like concat('%', #{content}, '%')</if>
+            <if test="type != null"> and c.type = #{type}</if>
+            <if test="userId != null"> and c.user_id = #{userId}</if>
+            <if test="targetId != null and targetId != ''"> and c.target_id = #{targetId}</if>
+        </where>
+        order by c.create_time desc
     </select>
 
-    <select id="selectCommentByTargetId" parameterType="String" resultMap="CommentResult">
-        select comment_id, content, target_id, target_type, user_id, nick_name, avatar, create_time from comment
-        where target_id = #{targetId}
-        order by create_time desc
+    <select id="selectCommentById" parameterType="Integer" resultMap="CommentResult">
+        select c.id, c.content, c.user_id, c.target_id, c.type, c.nick_name, c.create_time,
+            case when c.type = 1 then h.title when c.type = 2 then n.title end as target_name
+        from ich_comment c
+        left join heritage h on c.type = 1 and c.target_id = h.heritage_id
+        left join news n on c.type = 2 and c.target_id = n.news_id
+        where c.id = #{id}
     </select>
 
-    <insert id="insertComment" parameterType="Comment">
-        insert into comment
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="commentId != null">comment_id,</if>
-            <if test="content != null and content != ''">content,</if>
-            <if test="targetId != null and targetId != ''">target_id,</if>
-            <if test="targetType != null and targetType != ''">target_type,</if>
-            <if test="userId != null">user_id,</if>
-            <if test="nickName != null and nickName != ''">nick_name,</if>
-            <if test="avatar != null and avatar != ''">avatar,</if>
-            <if test="createTime != null">create_time,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="commentId != null">#{commentId},</if>
-            <if test="content != null and content != ''">#{content},</if>
-            <if test="targetId != null and targetId != ''">#{targetId},</if>
-            <if test="targetType != null and targetType != ''">#{targetType},</if>
-            <if test="userId != null">#{userId},</if>
-            <if test="nickName != null and nickName != ''">#{nickName},</if>
-            <if test="avatar != null and avatar != ''">#{avatar},</if>
-            <if test="createTime != null">#{createTime},</if>
-         </trim>
+    <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="id">
+        insert into ich_comment (content, user_id, target_id, type, nick_name, create_time)
+        values (#{content}, #{userId}, #{targetId}, #{type}, #{nickName}, #{createTime})
     </insert>
 
     <update id="updateComment" parameterType="Comment">
-        update comment
+        update ich_comment
         <trim prefix="SET" suffixOverrides=",">
             <if test="content != null and content != ''">content = #{content},</if>
-            <if test="targetId != null and targetId != ''">target_id = #{targetId},</if>
-            <if test="targetType != null and targetType != ''">target_type = #{targetType},</if>
-            <if test="userId != null">user_id = #{userId},</if>
-            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="type != null">type = #{type},</if>
         </trim>
-        where comment_id = #{commentId}
+        where id = #{id}
     </update>
 
-    <delete id="deleteCommentByCommentId" parameterType="String">
-        delete from comment where comment_id = #{commentId}
+    <delete id="deleteCommentById">
+        delete from ich_comment where id = #{id}
+        <if test="userId != null"> and user_id = #{userId}</if>
     </delete>
 
-    <delete id="deleteCommentByCommentIds" parameterType="String">
-        delete from comment where comment_id in
-        <foreach item="commentId" collection="array" open="(" separator="," close=")">
-            #{commentId}
+    <delete id="deleteCommentByIds" parameterType="Integer">
+        delete from ich_comment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
+
 </mapper>

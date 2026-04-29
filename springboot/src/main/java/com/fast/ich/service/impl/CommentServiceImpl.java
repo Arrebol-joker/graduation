@@ -1,9 +1,8 @@
 package com.fast.ich.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
-import com.fast.system.general.utils.DateUtils;
-import com.fast.system.general.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fast.ich.mapper.CommentMapper;
@@ -17,28 +16,27 @@ public class CommentServiceImpl implements ICommentService
     private CommentMapper commentMapper;
 
     @Override
-    public Comment selectCommentByCommentId(String commentId)
+    public List<Comment> selectCommentList(String targetId, Integer type)
     {
-        return commentMapper.selectCommentByCommentId(commentId);
+        return commentMapper.selectCommentList(targetId, type);
     }
 
     @Override
-    public List<Comment> selectCommentList(Comment comment)
+    public List<Comment> selectCommentPage(Comment comment)
     {
-        return commentMapper.selectCommentList(comment);
+        return commentMapper.selectCommentPage(comment);
     }
 
     @Override
-    public List<Comment> selectCommentByTargetId(String targetId)
+    public Comment selectCommentById(Integer id)
     {
-        return commentMapper.selectCommentByTargetId(targetId);
+        return commentMapper.selectCommentById(id);
     }
 
     @Override
     public int insertComment(Comment comment)
     {
-        comment.setCreateTime(DateUtils.getNowDate());
-        comment.setCommentId(IdUtils.fastSimpleUUID());
+        comment.setCreateTime(new Date());
         return commentMapper.insertComment(comment);
     }
 
@@ -49,14 +47,14 @@ public class CommentServiceImpl implements ICommentService
     }
 
     @Override
-    public int deleteCommentByCommentIds(String[] commentIds)
+    public int deleteCommentById(Integer id, Long userId)
     {
-        return commentMapper.deleteCommentByCommentIds(commentIds);
+        return commentMapper.deleteCommentById(id, userId);
     }
 
     @Override
-    public int deleteCommentByCommentId(String commentId)
+    public int deleteCommentByIds(Integer[] ids)
     {
-        return commentMapper.deleteCommentByCommentId(commentId);
+        return commentMapper.deleteCommentByIds(ids);
     }
 }

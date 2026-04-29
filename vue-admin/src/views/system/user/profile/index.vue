@@ -18,6 +18,13 @@
                         <div class="pull-right">{{ state.user.userName }}</div>
                      </li>
                      <li class="list-group-item">
+                        <svg-icon icon-class="user" />用户类型
+                        <div class="pull-right">
+                          <el-tag v-if="state.user.accountType === '1'" type="success" size="small">传承人</el-tag>
+                          <el-tag v-else type="info" size="small">普通用户</el-tag>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
                         <svg-icon icon-class="phone" />手机号码
                         <div class="pull-right">{{ state.user.phonenumber }}</div>
                      </li>

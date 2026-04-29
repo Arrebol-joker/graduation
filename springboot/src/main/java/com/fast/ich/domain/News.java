@@ -48,5 +48,8 @@ public class News extends BaseEntity
     /** 是否焦点 */
     private Boolean isFocus;
 
+    /** 搜索关键词（非数据库字段） */
+    private String keyword;
+
 
 }

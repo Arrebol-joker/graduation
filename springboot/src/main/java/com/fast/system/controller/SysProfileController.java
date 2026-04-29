@@ -39,7 +39,7 @@ public class SysProfileController extends BaseController
     public AjaxResult profile()
     {
         LoginUser loginUser = getLoginUser();
-        SysUser user = loginUser.getUser();
+        SysUser user = userService.selectUserById(loginUser.getUserId());
         AjaxResult ajax = AjaxResult.success(user);
         ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
         ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));

@@ -79,4 +79,10 @@ public interface HeritageMapper
      * @return
      */
     List<PieVO> selectCategoryChart();
+
+    /**
+     * 查询每种传承状态各有多少个
+     * @return
+     */
+    List<PieVO> selectStatusChart();
 }

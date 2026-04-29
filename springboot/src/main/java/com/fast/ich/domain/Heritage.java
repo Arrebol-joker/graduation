@@ -49,5 +49,14 @@ public class Heritage extends BaseEntity
     @Excel(name = "传承状态")
     private String status;
 
+    /** 非遗状态（0待审核 1申报成功 2申报失败） */
+    private String heritageStatus;
+
+    /** 传承人ID */
+    private Long heritageOwnerId;
+
+    /** 搜索关键词（非数据库字段） */
+    private String keyword;
+
 
 }

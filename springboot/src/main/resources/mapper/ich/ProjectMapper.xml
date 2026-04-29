@@ -39,8 +39,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectProjectByProjectId" parameterType="String" resultMap="ProjectResult">
-select project_id, name, category_id, introduction, description, inheritance, inheritors, contact, image_url, status, user_id, create_time from project
-        where project_id = #{projectId}
+select p.project_id, p.name, p.category_id, p.introduction, p.description, p.inheritance, p.inheritors, p.contact, p.image_url, p.status, p.user_id, p.create_time,
+pc.name as categoryName
+from project p
+left join project_category pc on p.category_id = pc.pc_id
+        where p.project_id = #{projectId}
     </select>
 
     <insert id="insertProject" parameterType="Project">

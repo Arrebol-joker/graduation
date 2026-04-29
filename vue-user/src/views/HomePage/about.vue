@@ -101,11 +101,11 @@
               </el-form-item>
 
               <!-- 提交按钮 -->
-              <el-form-item>
+              <div style="text-align: center">
                 <el-button type="primary" @click="submitContact">
                   提交留言
                 </el-button>
-              </el-form-item>
+              </div>
             </el-form>
           </div>
 

@@ -5,17 +5,17 @@ import com.fast.ich.domain.Comment;
 
 public interface ICommentService
 {
-    public Comment selectCommentByCommentId(String commentId);
+    public List<Comment> selectCommentList(String targetId, Integer type);
 
-    public List<Comment> selectCommentList(Comment comment);
+    public List<Comment> selectCommentPage(Comment comment);
 
-    public List<Comment> selectCommentByTargetId(String targetId);
+    public Comment selectCommentById(Integer id);
 
     public int insertComment(Comment comment);
 
     public int updateComment(Comment comment);
 
-    public int deleteCommentByCommentIds(String[] commentIds);
+    public int deleteCommentById(Integer id, Long userId);
 
-    public int deleteCommentByCommentId(String commentId);
+    public int deleteCommentByIds(Integer[] ids);
 }

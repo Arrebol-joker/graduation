@@ -72,6 +72,9 @@ public class SysUser extends BaseEntity {
     @Excel(name = "账号状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
+    /** 账户类型（0普通用户 1传承人） */
+    private String accountType;
+
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
 

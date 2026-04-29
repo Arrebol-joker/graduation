@@ -5,6 +5,23 @@
     <div class="section-container">
       <!-- 筛选器容器 -->
       <div class="filter-container">
+        <!-- 搜索栏 -->
+        <div class="search-bar">
+          <el-input
+              v-model="keyword"
+              placeholder="搜索新闻资讯..."
+              clearable
+              class="search-input"
+              @keyup.enter="handleSearch"
+          >
+            <template #prefix>
+              <el-icon><Search/></el-icon>
+            </template>
+          </el-input>
+          <el-button type="primary" class="search-btn" @click="handleSearch">搜索</el-button>
+          <el-button class="reset-btn" @click="handleReset">重置</el-button>
+        </div>
+        <!-- 分类筛选器 -->
         <div class="category-filter">
           <!-- 分类按钮 -->
           <el-button @click="setActiveCategory('')"
@@ -77,11 +94,14 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {listNews} from "@/api/ich/news.js";
-import {Calendar} from "@element-plus/icons-vue";
+import {Calendar, Search} from "@element-plus/icons-vue";
 import {useRouter} from "vue-router";
 
 //当前激活的类别
 const activeCategory = ref('')
+
+//关键词
+const keyword = ref('')
 
 //查询参数
 const query = ref({
@@ -102,26 +122,38 @@ const onlyCategories = ref(['政策新闻', '活动资讯', '非遗动态'])
 //根据类别进行条件查询
 const setActiveCategory = (category) => {
   activeCategory.value = category
-  if (category === '') {
-    query.value = {
-      pageNum: 1,
-      pageSize: 30,
-      category: null,
-    }
-    getList()
-  } else {
-    query.value = {
-      pageNum: 1,
-      pageSize: 30,
-      category: category,
-    }
-    getList()
-  }
+  query.value.pageNum = 1
+  query.value.category = category || null
+  getList()
+}
+
+//搜索
+const handleSearch = () => {
+  activeCategory.value = ''
+  query.value.pageNum = 1
+  query.value.pageSize = 30
+  query.value.category = null
+  query.value.keyword = keyword.value
+  getList()
+}
+
+//重置
+const handleReset = () => {
+  keyword.value = ''
+  activeCategory.value = ''
+  query.value.keyword = null
+  query.value.pageNum = 1
+  query.value.pageSize = 30
+  query.value.category = null
+  getList()
 }
 
 //查询数据
 const getList = () => {
-  listNews(query.value).then(res => {
+  listNews({
+    ...query.value,
+    _t: Date.now()
+  }).then(res => {
     newsList.value = res.rows
     total.value = res.total
   })
@@ -160,6 +192,34 @@ onMounted(() => {
   max-width: 1300px;
   margin: 0 auto;
   padding: 0 20px 40px;
+}
+
+/* 搜索栏样式 */
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 400px;
+}
+
+.search-input :deep(.el-input__wrapper) {
+  border-radius: 30px;
+  padding-left: 20px;
+}
+
+.search-btn {
+  border-radius: 30px !important;
+  padding: 8px 24px !important;
+}
+
+.reset-btn {
+  border-radius: 30px !important;
+  padding: 8px 24px !important;
 }
 
 /* 筛选器容器样式 */

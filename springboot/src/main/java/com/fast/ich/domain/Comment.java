@@ -1,31 +1,29 @@
 package com.fast.ich.domain;
 
-import com.fast.system.general.annotation.Excel;
-import com.fast.system.general.core.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-@EqualsAndHashCode(callSuper = true)
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment extends BaseEntity
+public class Comment
 {
-    private static final long serialVersionUID = 1L;
+    private Integer id;
 
-    private String commentId;
-
-    @Excel(name = "评论内容")
     private String content;
-
-    @Excel(name = "目标ID")
-    private String targetId;
-
-    @Excel(name = "目标类型")
-    private String targetType;
 
     private Long userId;
 
+    private String targetId;
+
+    private Integer type;
+
     private String nickName;
 
-    private String avatar;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    private String targetName;
 }

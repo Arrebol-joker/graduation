@@ -42,3 +42,12 @@ export function delHeritage(heritageId) {
     method: 'delete'
   })
 }
+
+// 审核非遗项目
+export function auditHeritage(data) {
+  return request({
+    url: '/ich/heritage/audit',
+    method: 'put',
+    data: data
+  })
+}

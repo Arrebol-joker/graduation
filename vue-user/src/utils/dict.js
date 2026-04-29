@@ -14,8 +14,12 @@ export function useDict(...args) {
         res.value[dictType] = dicts
       } else {
         getDicts(dictType).then(resp => {
-          res.value[dictType] = resp.data.map(p => ({ label: p.dictLabel, value: p.dictValue, elTagType: p.listClass, elTagClass: p.cssClass }))
+          const data = resp.data || []
+          res.value[dictType] = data.map(p => ({ label: p.dictLabel, value: p.dictValue, elTagType: p.listClass, elTagClass: p.cssClass }))
           useDictStore().setDict(dictType, res.value[dictType])
+        }).catch(error => {
+          console.error(`获取字典数据失败: ${dictType}`, error)
+          res.value[dictType] = []
         })
       }
     })

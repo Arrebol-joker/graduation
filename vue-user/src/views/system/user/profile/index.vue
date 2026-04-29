@@ -18,6 +18,13 @@
                         <div class="pull-right">{{ state.user.userName }}</div>
                      </li>
                      <li class="list-group-item">
+                        <svg-icon icon-class="user" />用户类型
+                        <div class="pull-right">
+                          <el-tag v-if="state.user.accountType === '1'" type="success" size="small">传承人</el-tag>
+                          <el-tag v-else type="info" size="small">普通用户</el-tag>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
                         <svg-icon icon-class="phone" />手机号码
                         <div class="pull-right">{{ state.user.phonenumber }}</div>
                      </li>
@@ -32,22 +39,59 @@
                   </ul>
                </div>
             </el-card>
+
+            <el-card class="box-card" style="margin-top: 20px">
+               <template v-slot:header>
+                 <div class="clearfix">
+                   <span>功能菜单</span>
+                 </div>
+               </template>
+               <el-menu :default-active="activeMenu" class="profile-menu" @select="handleMenuSelect">
+                  <el-menu-item index="userinfo">
+                     <el-icon><User/></el-icon>
+                     <span>基本资料</span>
+                  </el-menu-item>
+                  <el-menu-item index="resetPwd">
+                     <el-icon><Lock/></el-icon>
+                     <span>修改密码</span>
+                  </el-menu-item>
+                  <el-menu-item index="myComments">
+                     <el-icon><ChatDotSquare/></el-icon>
+                     <span>我的评论</span>
+                  </el-menu-item>
+                  <el-menu-item index="myProjects">
+                     <el-icon><Folder/></el-icon>
+                     <span>申报记录</span>
+                  </el-menu-item>
+                  <el-menu-item index="myContacts">
+                     <el-icon><Message/></el-icon>
+                     <span>我的留言</span>
+                  </el-menu-item>
+               </el-menu>
+            </el-card>
          </el-col>
          <el-col :span="18" :xs="24">
             <el-card>
                <template v-slot:header>
                  <div class="clearfix">
-                   <span>基本资料</span>
+                   <span>{{ menuTitle }}</span>
                  </div>
                </template>
-               <el-tabs v-model="activeTab">
-                  <el-tab-pane label="基本资料" name="userinfo">
-                     <userInfo :user="state.user" />
-                  </el-tab-pane>
-                  <el-tab-pane label="修改密码" name="resetPwd">
-                     <resetPwd />
-                  </el-tab-pane>
-               </el-tabs>
+               <div v-if="activeMenu === 'userinfo'">
+                  <userInfo :user="state.user" />
+               </div>
+               <div v-else-if="activeMenu === 'resetPwd'">
+                  <resetPwd />
+               </div>
+               <div v-else-if="activeMenu === 'myComments'">
+                  <myComments />
+               </div>
+               <div v-else-if="activeMenu === 'myProjects'">
+                  <myProjects />
+               </div>
+               <div v-else-if="activeMenu === 'myContacts'">
+                  <myContacts />
+               </div>
             </el-card>
          </el-col>
       </el-row>
@@ -58,14 +102,34 @@
 import userAvatar from "./userAvatar"
 import userInfo from "./userInfo"
 import resetPwd from "./resetPwd"
+import myComments from "./myComments"
+import myProjects from "./myProjects"
+import myContacts from "./myContacts"
 import { getUserProfile } from "@/api/system/user"
+import {ChatDotSquare, Folder, Lock, Message, User} from "@element-plus/icons-vue"
 
-const activeTab = ref("userinfo")
+const activeMenu = ref("userinfo")
+
+const menuTitle = computed(() => {
+  const titles = {
+    userinfo: '基本资料',
+    resetPwd: '修改密码',
+    myComments: '我的评论',
+    myProjects: '申报记录',
+    myContacts: '我的留言',
+  }
+  return titles[activeMenu.value] || '基本资料'
+})
+
 const state = reactive({
   user: {},
   roleGroup: {},
   postGroup: {}
 })
+
+const handleMenuSelect = (index) => {
+  activeMenu.value = index
+}
 
 function getUser() {
   getUserProfile().then(response => {
@@ -77,3 +141,25 @@ function getUser() {
 
 getUser()
 </script>
+
+<style scoped>
+.profile-menu {
+  border-right: none;
+}
+
+.profile-menu .el-menu-item {
+  border-radius: 8px;
+  margin-bottom: 4px;
+  height: 44px;
+  line-height: 44px;
+}
+
+.profile-menu .el-menu-item:hover {
+  background-color: #ecf5ff;
+}
+
+.profile-menu .el-menu-item.is-active {
+  background-color: #409EFF;
+  color: #fff;
+}
+</style>

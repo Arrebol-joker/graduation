@@ -78,4 +78,6 @@ public interface IHeritageService
      * @return
      */
     List<PieVO> selectCategoryChart();
+
+    List<PieVO> selectStatusChart();
 }

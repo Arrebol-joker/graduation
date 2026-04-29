@@ -17,6 +17,9 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+CREATE DATABASE IF NOT EXISTS `ich` CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+USE ich;
+
 -- ----------------------------
 -- Table structure for about
 -- ----------------------------
@@ -39,9 +42,6 @@ CREATE TABLE `about`  (
   PRIMARY KEY (`about_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '关于我们表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of about
--- ----------------------------
 INSERT INTO `about` VALUES ('A001', '非遗文化传承平台致力于保护和传承中国丰富的非物质文化遗产资源，推动非遗文化的传播和发展。', '/images/10014.webp', '我们的使命是传承和弘扬中华优秀传统文化，让非物质文化遗产在新时代焕发新的生机与活力。', '我们的愿景是成为全国领先的非遗文化保护平台，让更多人了解、认识和喜爱非物质文化遗产。', '我们的核心价值观是传承、创新、共享、发展。我们相信，只有传承才能延续文化根脉，只有创新才能适应时代发展，只有共享才能让文化惠及大众，只有发展才能让文化生生不息。', '010-12345678', '北京市东城区非遗文化保护中心', 'contact@heritage.com', 'admin', '2025-01-01 00:00:00', NULL, NULL, NULL);
 
 -- ----------------------------
@@ -62,9 +62,6 @@ CREATE TABLE `banner`  (
   PRIMARY KEY (`banner_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '轮播图表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of banner
--- ----------------------------
 INSERT INTO `banner` VALUES ('B001', '非遗文化展演活动', '4月15日市文化中心广场，精彩不容错过！', '/images/10002.jpg', 1, 'admin', '2025-03-20 00:00:00', NULL, NULL, NULL);
 INSERT INTO `banner` VALUES ('B002', '传统技艺传承人见面会', '5月20日市图书馆，与传承人面对面交流', '/images/10008.jpg', 2, 'admin', '2025-03-20 00:00:00', NULL, NULL, NULL);
 INSERT INTO `banner` VALUES ('B003', '非遗文化进社区', '走进社区，让非遗文化融入生活', '/images/10009.jpg', 3, 'admin', '2025-03-20 00:00:00', NULL, NULL, NULL);
@@ -88,9 +85,6 @@ CREATE TABLE `contact`  (
   PRIMARY KEY (`contact_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '留言反馈表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of contact
--- ----------------------------
 INSERT INTO `contact` VALUES ('C001', '张三', 'zhangsan@example.com', '请问蜀锦织造技艺的传承人培训班什么时候开始报名？', 1, '2025-03-20 10:30:00', 'admin', NULL, NULL, NULL);
 INSERT INTO `contact` VALUES ('C002', '李四', 'lisi@example.com', '我想了解皮影戏表演的预约方式，请问有什么要求？', 1, '2025-03-20 14:20:00', 'admin', NULL, NULL, NULL);
 INSERT INTO `contact` VALUES ('C003', '王五', 'wangwu@example.com', '建议增加更多关于传统技艺的展示活动，让更多人了解非遗文化。', 1, '2025-03-21 09:15:00', 'admin', NULL, NULL, NULL);
@@ -119,80 +113,10 @@ CREATE TABLE `event`  (
   PRIMARY KEY (`event_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '活动预告表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of event
--- ----------------------------
 INSERT INTO `event` VALUES ('E001', '非遗文化展演活动', '2025-04-15 00:00:00', '09:00-17:00', '市文化中心广场', '市非遗保护中心', '021-12345678', '本次活动将展示蜀锦织造、皮影戏、剪纸等多项非物质文化遗产项目，传承人现场表演技艺，观众可以近距离体验传统手工艺的魅力。活动期间还将举办非遗文化讲座和互动体验环节。', '/images/news_festival_opening.jpg', 'admin', '2025-03-20 00:00:00', NULL, NULL, NULL);
 INSERT INTO `event` VALUES ('E002', '传统技艺传承人见面会', '2025-05-20 00:00:00', '14:00-16:00', '市图书馆报告厅', '市文化局', '021-23456789', '本次活动邀请多位国家级非物质文化遗产传承人进行现场交流，分享传承经验和技艺心得。现场观众可以与传承人面对面交流，了解传统技艺的历史和发展。', '/images/heritage_pottery_workshop.jpg', 'admin', '2025-03-20 00:00:00', NULL, NULL, NULL);
 INSERT INTO `event` VALUES ('E003', '非遗文化进社区活动', '2025-06-01 00:00:00', '10:00-12:00', '各社区活动中心', '市非遗保护中心', '021-34567890', '为了让更多市民了解和认识非物质文化遗产，我们将在各社区开展非遗文化展示活动。活动内容包括传统技艺展示、民俗表演、非遗知识问答等，欢迎广大市民积极参与。', '/images/news_community_event.jpg', 'admin', '2025-03-20 00:00:00', NULL, NULL, NULL);
 INSERT INTO `event` VALUES ('E004', '青少年非遗体验营', '2025-07-10 00:00:00', '09:00-17:00', '市青少年宫', '市教育局、市非遗保护中心', '021-45678901', '本次体验营面向6-15岁青少年，通过非遗知识讲座、传统技艺体验、手工制作等活动，让青少年近距离感受传统文化的魅力。活动为期一天，提供午餐和材料包。', '/images/news_youth_engagement.jpg', 'admin', '2025-03-20 00:00:00', NULL, NULL, NULL);
-
--- ----------------------------
--- Table structure for gen_table
--- ----------------------------
-DROP TABLE IF EXISTS `gen_table`;
-CREATE TABLE `gen_table`  (
-  `table_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `table_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '表名称',
-  `table_comment` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '表描述',
-  `sub_table_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '关联子表的表名',
-  `sub_table_fk_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '子表关联的外键名',
-  `class_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '实体类名称',
-  `tpl_category` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT 'crud' COMMENT '使用的模板（crud单表操作 tree树表操作）',
-  `tpl_web_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '前端模板类型（element-ui模版 element-plus模版）',
-  `package_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '生成包路径',
-  `module_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '生成模块名',
-  `business_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '生成业务名',
-  `function_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '生成功能名',
-  `function_author` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '生成功能作者',
-  `gen_type` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '生成代码方式（0zip压缩包 1自定义路径）',
-  `gen_path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '/' COMMENT '生成路径（不填默认项目路径）',
-  `options` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '其它生成选项',
-  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
-  `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`table_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '代码生成业务表' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of gen_table
--- ----------------------------
-
--- ----------------------------
--- Table structure for gen_table_column
--- ----------------------------
-DROP TABLE IF EXISTS `gen_table_column`;
-CREATE TABLE `gen_table_column`  (
-  `column_id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `table_id` bigint NULL DEFAULT NULL COMMENT '归属表编号',
-  `column_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '列名称',
-  `column_comment` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '列描述',
-  `column_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '列类型',
-  `java_type` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT 'JAVA类型',
-  `java_field` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT 'JAVA字段名',
-  `is_pk` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '是否主键（1是）',
-  `is_increment` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '是否自增（1是）',
-  `is_required` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '是否必填（1是）',
-  `is_insert` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '是否为插入字段（1是）',
-  `is_edit` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '是否编辑字段（1是）',
-  `is_list` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '是否列表字段（1是）',
-  `is_query` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '是否查询字段（1是）',
-  `query_type` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT 'EQ' COMMENT '查询方式（等于、不等于、大于、小于、范围）',
-  `html_type` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '显示类型（文本框、文本域、下拉框、复选框、单选框、日期控件）',
-  `dict_type` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '字典类型',
-  `sort` int NULL DEFAULT NULL COMMENT '排序',
-  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`column_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '代码生成业务表字段' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of gen_table_column
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for heritage
@@ -207,6 +131,8 @@ CREATE TABLE `heritage`  (
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '所在地',
   `category` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '类别',
   `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '传承状态',
+  `heritage_status` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '非遗状态（0待申报 1待审核 2申报成功 3申报失败）',
+  `heritage_owner_id` bigint NULL DEFAULT NULL COMMENT '传承人ID',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '创建者',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '更新者',
@@ -215,19 +141,16 @@ CREATE TABLE `heritage`  (
   PRIMARY KEY (`heritage_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '非遗项目表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of heritage
--- ----------------------------
-INSERT INTO `heritage` VALUES ('59c48f7c95bc44a18e67e41a35e788a7', '2132', '3121', '324141', '/profile/upload/2026/03/29/微信图片_2026-03-29_184609_372_20260329200220A003.jpg', '未知', '传统技艺', '传承中', '2026-03-29 20:02:32', '', '', NULL, NULL);
-INSERT INTO `heritage` VALUES ('H001', '蜀锦织造技艺', '蜀锦是中国四大名锦之一，有着两千多年的历史。', '蜀锦织造技艺以蚕丝为原料，经过染丝、并丝、捻丝、整经、织造等多道工序完成。其特点是图案精美、色彩艳丽、质地柔软。2006年被列入第一批国家级非物质文化遗产名录。', '/images/10009.jpg', '四川省成都市', '传统技艺', '国家级', '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
-INSERT INTO `heritage` VALUES ('H002', '皮影戏', '皮影戏是中国民间古老的传统艺术，有着悠久的历史。', '皮影戏是一种以兽皮或纸板做成的人物剪影以表演故事的民间戏剧。2011年被列入联合国教科文组织\"人类非物质文化遗产代表作名录\"。', '/images/10005.jpg', '全国范围', '传统戏剧', '世界级', '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
-INSERT INTO `heritage` VALUES ('H003', '中国书法', '书法是中国特有的传统艺术，历史悠久，源远流长。', '书法是中国传统文化的重要组成部分，包括楷书、行书、草书、隶书、篆书等五种字体。2009年被列入联合国教科文组织\"人类非物质文化遗产代表作名录\"。', '/images/10001.jpg', '全国范围', '传统美术', '世界级', '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
-INSERT INTO `heritage` VALUES ('H004', '剪纸艺术', '剪纸是一种用剪刀或刻刀在纸上剪刻花纹，用于装点生活或配合其他民俗活动的民间艺术。', '中国剪纸在2009年被列入联合国教科文组织\"人类非物质文化遗产代表作名录\"。剪纸艺术具有广泛的群众基础，是中国民间艺术的重要组成部分。', '/images/10002.jpg', '全国范围', '传统美术', '世界级', '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
-INSERT INTO `heritage` VALUES ('H005', '京剧', '京剧是中国五大戏曲剧种之一，被誉为中国国粹。', '京剧集唱、念、做、打于一体的综合性艺术。2010年被列入联合国教科文组织\"人类非物质文化遗产代表作名录\"。', '/images/10013.webp', '北京市', '传统戏剧', '世界级', '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
-INSERT INTO `heritage` VALUES ('H006', '端午节', '端午节是中国重要的传统节日之一。', '端午节起源于中国古代，有着悠久的历史和丰富的文化内涵。2009年被列入联合国教科文组织\"人类非物质文化遗产代表作名录\"。', '/images/10014.webp', '全国范围', '民俗活动', '世界级', '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
-INSERT INTO `heritage` VALUES ('P001', '蜀锦织造技艺申报', '蜀锦是中国四大名锦之一，起源于战国时期，有两千多年的历史。', '蜀锦织造技艺以蚕丝为原料，经过染丝、并丝、捻丝、整经、织造等多道工序完成。其特点是图案精美、色彩艳丽、质地柔软。', '/images/10001.jpg', '未知', '传统技艺', '传承中', '2025-01-15 00:00:00', 'admin', '', NULL, NULL);
-INSERT INTO `heritage` VALUES ('P002', '皮影戏表演艺术', '皮影戏是中国民间古老的传统艺术，老北京人都叫它\"驴皮影\"。', '皮影戏是一种以兽皮或纸板做成的人物剪影以表演故事的民间戏剧。表演时，艺人们在白色幕布后面，一边操纵影人，一边用当地流行的曲调讲述故事。', '/images/10002.jpg', '未知', '民俗活动', '传承中', '2025-02-10 00:00:00', 'admin', '', NULL, NULL);
-INSERT INTO `heritage` VALUES ('P003', '中国书法艺术', '书法是中国特有的传统艺术，历史悠久，源远流长。', '书法是中国传统文化的重要组成部分，包括楷书、行书、草书、隶书、篆书等五种字体。书法艺术讲究笔法、结构、章法和墨法，是中国文人墨客必备的修养。', '/images/10003.jpg', '未知', '传统美术', '传承中', '2025-03-05 00:00:00', 'admin', '', NULL, NULL);
+INSERT INTO `heritage` VALUES ('59c48f7c95bc44a18e67e41a35e788a7', '2132', '3121', '324141', '/profile/upload/2026/03/29/微信图片_2026-03-29_184609_372_20260329200220A003.jpg', '未知', '传统技艺', '传承中', '2', 2, '2026-03-29 20:02:32', '', '', NULL, NULL);
+INSERT INTO `heritage` VALUES ('H001', '蜀锦织造技艺', '蜀锦是中国四大名锦之一，有着两千多年的历史。', '蜀锦织造技艺以蚕丝为原料，经过染丝、并丝、捻丝、整经、织造等多道工序完成。其特点是图案精美、色彩艳丽、质地柔软。2006年被列入第一批国家级非物质文化遗产名录。', '/images/10009.jpg', '四川省成都市', '传统技艺', '国家级', '2', NULL, '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
+INSERT INTO `heritage` VALUES ('H002', '皮影戏', '皮影戏是中国民间古老的传统艺术，有着悠久的历史。', '皮影戏是一种以兽皮或纸板做成的人物剪影以表演故事的民间戏剧。2011年被列入联合国教科文组织"人类非物质文化遗产代表作名录"。', '/images/10005.jpg', '全国范围', '传统戏剧', '世界级', '2', NULL, '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
+INSERT INTO `heritage` VALUES ('H003', '中国书法', '书法是中国特有的传统艺术，历史悠久，源远流长。', '书法是中国传统文化的重要组成部分，包括楷书、行书、草书、隶书、篆书等五种字体。2009年被列入联合国教科文组织"人类非物质文化遗产代表作名录"。', '/images/10001.jpg', '全国范围', '传统美术', '世界级', '2', NULL, '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
+INSERT INTO `heritage` VALUES ('H004', '剪纸艺术', '剪纸是一种用剪刀或刻刀在纸上剪刻花纹，用于装点生活或配合其他民俗活动的民间艺术。', '中国剪纸在2009年被列入联合国教科文组织"人类非物质文化遗产代表作名录"。剪纸艺术具有广泛的群众基础，是中国民间艺术的重要组成部分。', '/images/10002.jpg', '全国范围', '传统美术', '世界级', '2', NULL, '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
+INSERT INTO `heritage` VALUES ('H005', '京剧', '京剧是中国五大戏曲剧种之一，被誉为中国国粹。', '京剧集唱、念、做、打于一体的综合性艺术。2010年被列入联合国教科文组织"人类非物质文化遗产代表作名录"。', '/images/10013.webp', '北京市', '传统戏剧', '世界级', '2', NULL, '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
+INSERT INTO `heritage` VALUES ('H006', '端午节', '端午节是中国重要的传统节日之一。', '端午节起源于中国古代，有着悠久的历史和丰富的文化内涵。2009年被列入联合国教科文组织"人类非物质文化遗产代表作名录"。', '/images/10014.webp', '全国范围', '民俗活动', '世界级', '2', NULL, '2025-01-01 00:00:00', 'admin', NULL, NULL, NULL);
+INSERT INTO `heritage` VALUES ('P001', '蜀锦织造技艺申报', '蜀锦是中国四大名锦之一，起源于战国时期，有两千多年的历史。', '蜀锦织造技艺以蚕丝为原料，经过染丝、并丝、捻丝、整经、织造等多道工序完成。其特点是图案精美、色彩艳丽、质地柔软。', '/images/10001.jpg', '未知', '传统技艺', '传承中', '2', NULL, '2025-01-15 00:00:00', 'admin', '', NULL, NULL);
+INSERT INTO `heritage` VALUES ('P002', '皮影戏表演艺术', '皮影戏是中国民间古老的传统艺术，老北京人都叫它"驴皮影"。', '皮影戏是一种以兽皮或纸板做成的人物剪影以表演故事的民间戏剧。表演时，艺人们在白色幕布后面，一边操纵影人，一边用当地流行的曲调讲述故事。', '/images/10002.jpg', '未知', '民俗活动', '传承中', '2', NULL, '2025-02-10 00:00:00', 'admin', '', NULL, NULL);
+INSERT INTO `heritage` VALUES ('P003', '中国书法艺术', '书法是中国特有的传统艺术，历史悠久，源远流长。', '书法是中国传统文化的重要组成部分，包括楷书、行书、草书、隶书、篆书等五种字体。书法艺术讲究笔法、结构、章法和墨法，是中国文人墨客必备的修养。', '/images/10003.jpg', '未知', '传统美术', '传承中', '2', NULL, '2025-03-05 00:00:00', 'admin', '', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for master
@@ -247,9 +170,6 @@ CREATE TABLE `master`  (
   PRIMARY KEY (`master_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '传承人表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of master
--- ----------------------------
 INSERT INTO `master` VALUES ('M001', '张华', '蜀锦织造技艺、图案设计', '四川省成都市', '/images/10009.jpg', 'admin', '2025-01-01 00:00:00', NULL, NULL, '蜀锦织造技艺国家级传承人');
 INSERT INTO `master` VALUES ('M002', '李明', '皮影戏表演、皮影制作', '陕西省西安市', '/images/10005.jpg', 'admin', '2025-01-01 00:00:00', NULL, NULL, '皮影戏国家级传承人');
 INSERT INTO `master` VALUES ('M003', '王芳', '楷书、行书、草书', '江苏省苏州市', '/images/10001.jpg', 'admin', '2025-01-01 00:00:00', NULL, NULL, '书法艺术省级传承人');
@@ -276,9 +196,6 @@ CREATE TABLE `master_contribution`  (
   PRIMARY KEY (`contribution_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '传承贡献表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of master_contribution
--- ----------------------------
 INSERT INTO `master_contribution` VALUES (1, 'M001', '从事蜀锦织造技艺30年，培养徒弟20余人，传承技艺得到有效保护。', 'admin', '2025-01-01 00:00:00', NULL, NULL, NULL);
 INSERT INTO `master_contribution` VALUES (2, 'M001', '创新蜀锦图案设计，将传统与现代元素相结合，开发新产品。', 'admin', '2025-01-01 00:00:00', NULL, NULL, NULL);
 INSERT INTO `master_contribution` VALUES (3, 'M002', '皮影戏表演艺术得到国内外观众认可，多次赴海外演出。', 'admin', '2025-01-01 00:00:00', NULL, NULL, NULL);
@@ -306,9 +223,6 @@ CREATE TABLE `news`  (
   PRIMARY KEY (`news_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '新闻资讯表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of news
--- ----------------------------
 INSERT INTO `news` VALUES ('N001', '非物质文化遗产保护工作取得新进展', '近年来，我国非物质文化遗产保护工作取得了显著成效，一大批濒临失传的传统技艺得到了有效保护和传承。', '为加强非物质文化遗产保护工作，各级政府出台了一系列政策措施，建立了非物质文化遗产名录体系，设立了专项资金支持传承人开展传习活动。截至2025年，我国共有国家级非物质文化遗产代表性项目1557项，代表性传承人3068名。', '/images/10014.webp', '文化部', '政策法规', '2025-01-20 00:00:00', 1, 'admin', NULL, NULL, NULL);
 INSERT INTO `news` VALUES ('N002', '传统技艺进校园活动圆满举行', '为弘扬中华优秀传统文化，让青少年近距离感受非物质文化遗产的魅力，某市举办了传统技艺进校园活动。', '活动现场，多位非物质文化遗产传承人展示了蜀锦织造、皮影戏、剪纸等传统技艺，并与学生们进行了互动交流。学生们亲手体验了传统手工艺的制作过程，感受到了传统文化的独特魅力。此次活动共有500多名学生参与，取得了良好的教育效果。', '/images/10002.jpg', '市教育局', '活动报道', '2025-02-15 00:00:00', 0, 'admin', NULL, NULL, NULL);
 INSERT INTO `news` VALUES ('N003', '非物质文化遗产传承人培训班开班', '为提升非物质文化遗产传承人的专业素养和传承能力，某省举办了非物质文化遗产传承人培训班。', '本次培训邀请了知名专家学者授课，内容涵盖非遗保护政策、传承技艺、市场营销等方面。共有来自全省各地的50余名传承人参加了培训。通过培训，传承人不仅提高了技艺水平，还开阔了视野，增强了传承信心。', '/images/10008.jpg', '省文化和旅游厅', '培训通知', '2025-03-10 00:00:00', 0, 'admin', NULL, NULL, NULL);
@@ -342,12 +256,9 @@ CREATE TABLE `project`  (
   PRIMARY KEY (`project_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '项目申报表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of project
--- ----------------------------
 INSERT INTO `project` VALUES ('59c48f7c95bc44a18e67e41a35e788a7', '2132', '1', '3121', '324141', NULL, '32113', '321321', '32121', '/profile/upload/2026/03/29/微信图片_2026-03-29_184609_372_20260329200220A003.jpg', 1, 2, '2026-03-29 20:02:32', '', '', NULL, NULL);
 INSERT INTO `project` VALUES ('P001', '蜀锦织造技艺申报', '1', '蜀锦是中国四大名锦之一，起源于战国时期，有两千多年的历史。', '蜀锦织造技艺以蚕丝为原料，经过染丝、并丝、捻丝、整经、织造等多道工序完成。其特点是图案精美、色彩艳丽、质地柔软。', '/images/heritage_embroidery_detail.jpg', '起源于四川成都，最早可追溯到战国时期，经过历代发展形成了独特的技艺体系。', '张三、李四、王五等传承人', '13800138000', NULL, 1, 1, '2025-01-15 00:00:00', 'admin', NULL, NULL, NULL);
-INSERT INTO `project` VALUES ('P002', '皮影戏表演艺术', '2', '皮影戏是中国民间古老的传统艺术，老北京人都叫它\"驴皮影\"。', '皮影戏是一种以兽皮或纸板做成的人物剪影以表演故事的民间戏剧。表演时，艺人们在白色幕布后面，一边操纵影人，一边用当地流行的曲调讲述故事。', '/images/heritage_puppetry.jpg', '起源于西汉时期，已有两千多年历史，流行于中国各地。', '赵六、钱七等传承人', '13900139000', NULL, 1, 1, '2025-02-10 00:00:00', 'admin', NULL, NULL, NULL);
+INSERT INTO `project` VALUES ('P002', '皮影戏表演艺术', '2', '皮影戏是中国民间古老的传统艺术，老北京人都叫它"驴皮影"。', '皮影戏是一种以兽皮或纸板做成的人物剪影以表演故事的民间戏剧。表演时，艺人们在白色幕布后面，一边操纵影人，一边用当地流行的曲调讲述故事。', '/images/heritage_puppetry.jpg', '起源于西汉时期，已有两千多年历史，流行于中国各地。', '赵六、钱七等传承人', '13900139000', NULL, 1, 1, '2025-02-10 00:00:00', 'admin', NULL, NULL, NULL);
 INSERT INTO `project` VALUES ('P003', '中国书法艺术', '3', '书法是中国特有的传统艺术，历史悠久，源远流长。', '书法是中国传统文化的重要组成部分，包括楷书、行书、草书、隶书、篆书等五种字体。书法艺术讲究笔法、结构、章法和墨法，是中国文人墨客必备的修养。', '/images/heritage_calligraphy.jpg', '起源于商周时期，经过历代发展形成了独特的艺术体系。', '孙八、周九等传承人', '13700137000', NULL, 1, 1, '2025-03-05 00:00:00', 'admin', NULL, NULL, NULL);
 
 -- ----------------------------
@@ -365,13 +276,34 @@ CREATE TABLE `project_category`  (
   PRIMARY KEY (`pc_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '项目申报类别表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of project_category
--- ----------------------------
 INSERT INTO `project_category` VALUES ('1', '传统技艺', 'admin', '2025-01-01 00:00:00', NULL, NULL, '传统手工技艺类项目');
 INSERT INTO `project_category` VALUES ('2', '民俗活动', 'admin', '2025-01-01 00:00:00', NULL, NULL, '传统民俗节庆活动');
 INSERT INTO `project_category` VALUES ('3', '传统美术', 'admin', '2025-01-01 00:00:00', NULL, NULL, '传统美术绘画类项目');
 INSERT INTO `project_category` VALUES ('4', '传统音乐', 'admin', '2025-01-01 00:00:00', NULL, NULL, '传统音乐表演类项目');
+
+-- ----------------------------
+-- Table structure for sys_dept
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dept`;
+CREATE TABLE `sys_dept`  (
+  `dept_id` bigint NOT NULL AUTO_INCREMENT COMMENT '部门id',
+  `parent_id` bigint DEFAULT 0 COMMENT '父部门id',
+  `ancestors` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '祖级列表',
+  `dept_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '部门名称',
+  `order_num` int DEFAULT 0 COMMENT '显示顺序',
+  `leader` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '负责人',
+  `phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '联系电话',
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱',
+  `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '0' COMMENT '部门状态（0正常 1停用）',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '创建者',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '更新者',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`dept_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 200 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '部门表' ROW_FORMAT = DYNAMIC;
+
+INSERT INTO `sys_dept` VALUES (100, 0, '0', '非遗保护中心', 0, 'admin', NULL, NULL, '0', '0', 'admin', '2025-08-30 08:59:53', '', NULL);
 
 -- ----------------------------
 -- Table structure for sys_dict_data
@@ -395,9 +327,6 @@ CREATE TABLE `sys_dict_data`  (
   PRIMARY KEY (`dict_code`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '字典数据表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of sys_dict_data
--- ----------------------------
 INSERT INTO `sys_dict_data` VALUES (1, 1, '男', '0', 'sys_user_sex', '', '', 'Y', '0', 'admin', '2025-08-30 08:59:54', '', NULL, '性别男');
 INSERT INTO `sys_dict_data` VALUES (2, 2, '女', '1', 'sys_user_sex', '', '', 'N', '0', 'admin', '2025-08-30 08:59:54', '', NULL, '性别女');
 INSERT INTO `sys_dict_data` VALUES (3, 3, '未知', '2', 'sys_user_sex', '', '', 'N', '0', 'admin', '2025-08-30 08:59:54', '', NULL, '性别未知');
@@ -426,9 +355,6 @@ CREATE TABLE `sys_dict_type`  (
   UNIQUE INDEX `dict_type`(`dict_type` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '字典类型表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of sys_dict_type
--- ----------------------------
 INSERT INTO `sys_dict_type` VALUES (1, '用户性别', 'sys_user_sex', '0', 'admin', '2025-08-30 08:59:54', '', NULL, '用户性别列表');
 INSERT INTO `sys_dict_type` VALUES (2, '菜单状态', 'sys_show_hide', '0', 'admin', '2025-08-30 08:59:54', '', NULL, '菜单状态列表');
 INSERT INTO `sys_dict_type` VALUES (3, '系统开关', 'sys_normal_disable', '0', 'admin', '2025-08-30 08:59:54', '', NULL, '系统开关列表');
@@ -460,32 +386,86 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2017 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2037 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of sys_menu
--- ----------------------------
 INSERT INTO `sys_menu` VALUES (1, '系统管理', 0, 1, 'system', NULL, '', '', 1, 0, 'M', '0', '0', '', '系统管理', 'admin', '2025-08-30 08:59:54', 'admin', '2025-09-11 13:30:12', '系统管理目录');
 INSERT INTO `sys_menu` VALUES (100, '用户管理', 1, 1, 'user', 'system/user/index', '', '', 1, 1, 'C', '0', '0', 'system:user:list', '用户管理', 'admin', '2025-08-30 08:59:54', 'admin', '2025-09-01 11:20:55', '用户管理菜单');
 INSERT INTO `sys_menu` VALUES (101, '角色管理', 1, 2, 'role', 'system/role/index', '', '', 1, 1, 'C', '0', '0', 'system:role:list', '角色管理', 'admin', '2025-08-30 08:59:54', 'admin', '2025-09-01 11:26:22', '角色管理菜单');
 INSERT INTO `sys_menu` VALUES (102, '菜单管理', 1, 3, 'menu', 'system/menu/index', '', '', 1, 1, 'C', '0', '0', 'system:menu:list', '菜单管理', 'admin', '2025-08-30 08:59:54', 'admin', '2025-09-01 11:26:28', '菜单管理菜单');
-INSERT INTO `sys_menu` VALUES (105, '字典管理', 1, 6, 'dict', 'system/dict/index', '', '', 1, 1, 'C', '0', '0', 'system:dict:list', '字典管理', 'admin', '2025-08-30 08:59:54', 'admin', '2025-09-01 11:26:38', '字典管理菜单');
-INSERT INTO `sys_menu` VALUES (116, '代码生成', 1, 8, 'gen', 'tool/gen/index', '', '', 1, 1, 'C', '0', '0', 'tool:gen:list', '代码生成', 'admin', '2025-08-30 08:59:54', 'admin', '2025-09-01 11:26:49', '代码生成菜单');
-INSERT INTO `sys_menu` VALUES (2000, '非遗管理', 0, 2, 'ich', NULL, NULL, NULL, 1, 0, 'M', '0', '0', NULL, '非遗管理', 'admin', '2026-03-29 20:57:57', '', NULL, '??????');
-INSERT INTO `sys_menu` VALUES (2001, '项目申报', 2000, 1, 'project', 'ich/project/index', NULL, NULL, 1, 0, 'C', '0', '0', 'ich:project:list', '项目申报', 'admin', '2026-03-29 20:57:57', '', NULL, '??????');
+INSERT INTO `sys_menu` VALUES (117, '操作日志', 1, 9, 'operlog', 'system/operlog/index', '', '', 1, 1, 'C', '0', '0', 'system:operlog:list', '操作日志', 'admin', '2026-04-28 00:00:00', '', NULL, '操作日志菜单');
+INSERT INTO `sys_menu` VALUES (118, '操作日志查询', 117, 1, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:operlog:query', '#', 'admin', '2026-04-28 00:00:00', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (119, '操作日志删除', 117, 2, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:operlog:remove', '#', 'admin', '2026-04-28 00:00:00', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (120, '在线用户', 1, 10, 'online', 'system/online/index', '', '', 1, 1, 'C', '0', '0', 'system:online:list', '在线用户', 'admin', '2026-04-28 00:00:00', '', NULL, '在线用户菜单');
+INSERT INTO `sys_menu` VALUES (121, '在线用户查询', 120, 1, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:online:list', '#', 'admin', '2026-04-28 00:00:00', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (122, '在线用户强退', 120, 2, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'system:online:forceLogout', '#', 'admin', '2026-04-28 00:00:00', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2000, '非遗管理', 0, 2, 'ich', NULL, NULL, NULL, 1, 0, 'M', '0', '0', NULL, '非遗管理', 'admin', '2026-03-29 20:57:57', '', NULL, '非遗管理目录');
+INSERT INTO `sys_menu` VALUES (2001, '项目申报', 2000, 1, 'project', 'ich/project/index', NULL, NULL, 1, 0, 'C', '0', '0', 'ich:project:list', '项目申报', 'admin', '2026-03-29 20:57:57', '', NULL, '项目申报菜单');
 INSERT INTO `sys_menu` VALUES (2002, '项目申报查询', 2001, 1, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:project:query', '#', 'admin', '2026-03-29 20:11:45', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2003, '项目申报新增', 2001, 2, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:project:add', '#', 'admin', '2026-03-29 20:11:54', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2004, '项目申报修改', 2001, 3, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:project:edit', '#', 'admin', '2026-03-29 20:12:04', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2005, '项目申报删除', 2001, 4, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:project:remove', '#', 'admin', '2026-03-29 20:12:11', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2006, '项目申报审核', 2001, 5, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:project:approve', '#', 'admin', '2026-03-29 20:12:19', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2007, '项目申报导出', 2001, 6, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:project:export', '#', 'admin', '2026-03-29 20:12:26', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (2010, '非遗项目管理', 2000, 2, 'heritage', 'ich/heritage/index', NULL, NULL, 1, 0, 'C', '0', '0', 'ich:heritage:list', '非遗项目管理', 'admin', '2026-03-29 20:58:36', '', NULL, '????????');
+INSERT INTO `sys_menu` VALUES (2010, '非遗项目管理', 2000, 2, 'heritage', 'ich/heritage/index', NULL, NULL, 1, 0, 'C', '0', '0', 'ich:heritage:list', '非遗项目管理', 'admin', '2026-03-29 20:58:36', '', NULL, '非遗项目管理菜单');
 INSERT INTO `sys_menu` VALUES (2011, '非遗项目查询', 2010, 1, '#', NULL, NULL, '', 1, 1, 'F', '0', '0', 'ich:heritage:query', '#', 'admin', '2026-03-29 20:40:02', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2012, '非遗项目新增', 2010, 2, '#', NULL, NULL, '', 1, 1, 'F', '0', '0', 'ich:heritage:add', '#', 'admin', '2026-03-29 20:40:02', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2013, '非遗项目修改', 2010, 3, '#', NULL, NULL, '', 1, 1, 'F', '0', '0', 'ich:heritage:edit', '#', 'admin', '2026-03-29 20:40:02', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2014, '非遗项目删除', 2010, 4, '#', NULL, NULL, '', 1, 1, 'F', '0', '0', 'ich:heritage:remove', '#', 'admin', '2026-03-29 20:40:02', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2015, '非遗项目导出', 2010, 5, '#', NULL, NULL, '', 1, 1, 'F', '0', '0', 'ich:heritage:export', '#', 'admin', '2026-03-29 20:40:02', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2016, '非遗项目导入', 2010, 6, '#', NULL, NULL, '', 1, 1, 'F', '0', '0', 'ich:heritage:import', '#', 'admin', '2026-03-29 20:40:02', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2030, '新闻资讯管理', 2000, 3, 'news', 'ich/news/index', '', '', 1, 1, 'C', '0', '0', 'ich:news:list', '新闻资讯管理', 'admin', NOW(), '', NULL, '新闻资讯管理菜单');
+INSERT INTO `sys_menu` VALUES (2031, '新闻资讯查询', 2030, 1, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:news:query', '#', 'admin', NOW(), '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2032, '新闻资讯新增', 2030, 2, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:news:add', '#', 'admin', NOW(), '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2033, '新闻资讯修改', 2030, 3, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:news:edit', '#', 'admin', NOW(), '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2034, '新闻资讯删除', 2030, 4, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:news:remove', '#', 'admin', NOW(), '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2035, '新闻资讯导出', 2030, 5, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:news:export', '#', 'admin', NOW(), '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2036, '新闻资讯导入', 2030, 6, '#', '', NULL, NULL, 1, 0, 'F', '0', '0', 'ich:news:import', '#', 'admin', NOW(), '', NULL, '');
+
+-- ----------------------------
+-- Table structure for sys_oper_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_oper_log`;
+CREATE TABLE `sys_oper_log` (
+  `oper_id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志主键',
+  `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '模块标题',
+  `business_type` int DEFAULT '0' COMMENT '业务类型（0=其他 1=新增 2=修改 3=删除）',
+  `method` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '方法名称',
+  `request_method` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '请求方式',
+  `operator_type` int DEFAULT '0' COMMENT '操作类别（0=其他 1=后台用户）',
+  `oper_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '操作人员',
+  `dept_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '部门名称',
+  `oper_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '请求URL',
+  `oper_ip` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '主机地址',
+  `oper_location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '操作地点',
+  `oper_param` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '请求参数',
+  `json_result` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '返回参数',
+  `status` int DEFAULT '0' COMMENT '操作状态（0=正常 1=异常）',
+  `error_msg` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '错误消息',
+  `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
+  PRIMARY KEY (`oper_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='操作日志记录';
+
+-- ----------------------------
+-- Table structure for sys_post
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_post`;
+CREATE TABLE `sys_post`  (
+  `post_id` bigint NOT NULL AUTO_INCREMENT COMMENT '岗位ID',
+  `post_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '岗位编码',
+  `post_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '岗位名称',
+  `post_sort` int NOT NULL COMMENT '显示顺序',
+  `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '状态（0正常 1停用）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '创建者',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '' COMMENT '更新者',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`post_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '岗位信息表' ROW_FORMAT = DYNAMIC;
+
+INSERT INTO `sys_post` VALUES (1, 'ceo', '主任', 1, '0', 'admin', '2025-08-30 08:59:53', '', NULL, '');
+INSERT INTO `sys_post` VALUES (2, 'se', '副主任', 2, '0', 'admin', '2025-08-30 08:59:53', '', NULL, '');
+INSERT INTO `sys_post` VALUES (3, 'hr', '工作人员', 3, '0', 'admin', '2025-08-30 08:59:53', '', NULL, '');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -509,9 +489,6 @@ CREATE TABLE `sys_role`  (
   PRIMARY KEY (`role_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 99 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '角色信息表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of sys_role
--- ----------------------------
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 'admin', 1, '1', 1, 1, '0', '0', 'admin', '2025-08-30 08:59:54', '', NULL, '超级管理员');
 
 -- ----------------------------
@@ -524,9 +501,18 @@ CREATE TABLE `sys_role_menu`  (
   PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '角色和菜单关联表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of sys_role_menu
--- ----------------------------
+INSERT INTO `sys_role_menu` VALUES (1, 1);
+INSERT INTO `sys_role_menu` VALUES (1, 100);
+INSERT INTO `sys_role_menu` VALUES (1, 101);
+INSERT INTO `sys_role_menu` VALUES (1, 102);
+INSERT INTO `sys_role_menu` VALUES (1, 117);
+INSERT INTO `sys_role_menu` VALUES (1, 118);
+INSERT INTO `sys_role_menu` VALUES (1, 119);
+INSERT INTO `sys_role_menu` VALUES (1, 120);
+INSERT INTO `sys_role_menu` VALUES (1, 121);
+INSERT INTO `sys_role_menu` VALUES (1, 122);
+INSERT INTO `sys_role_menu` VALUES (1, 2000);
+INSERT INTO `sys_role_menu` VALUES (1, 2001);
 INSERT INTO `sys_role_menu` VALUES (1, 2002);
 INSERT INTO `sys_role_menu` VALUES (1, 2003);
 INSERT INTO `sys_role_menu` VALUES (1, 2004);
@@ -534,6 +520,19 @@ INSERT INTO `sys_role_menu` VALUES (1, 2005);
 INSERT INTO `sys_role_menu` VALUES (1, 2006);
 INSERT INTO `sys_role_menu` VALUES (1, 2007);
 INSERT INTO `sys_role_menu` VALUES (1, 2010);
+INSERT INTO `sys_role_menu` VALUES (1, 2011);
+INSERT INTO `sys_role_menu` VALUES (1, 2012);
+INSERT INTO `sys_role_menu` VALUES (1, 2013);
+INSERT INTO `sys_role_menu` VALUES (1, 2014);
+INSERT INTO `sys_role_menu` VALUES (1, 2015);
+INSERT INTO `sys_role_menu` VALUES (1, 2016);
+INSERT INTO `sys_role_menu` VALUES (1, 2030);
+INSERT INTO `sys_role_menu` VALUES (1, 2031);
+INSERT INTO `sys_role_menu` VALUES (1, 2032);
+INSERT INTO `sys_role_menu` VALUES (1, 2033);
+INSERT INTO `sys_role_menu` VALUES (1, 2034);
+INSERT INTO `sys_role_menu` VALUES (1, 2035);
+INSERT INTO `sys_role_menu` VALUES (1, 2036);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -551,6 +550,7 @@ CREATE TABLE `sys_user`  (
   `avatar` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '头像地址',
   `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '密码',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '账号状态（0正常 1停用）',
+  `account_type` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '账户类型（0普通用户 1传承人）',
   `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '0' COMMENT '删除标志（0代表存在 2代表删除）',
   `login_ip` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '最后登录IP',
   `login_date` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
@@ -562,16 +562,25 @@ CREATE TABLE `sys_user`  (
   PRIMARY KEY (`user_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 103 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '用户信息表' ROW_FORMAT = DYNAMIC;
 
+INSERT INTO `sys_user` VALUES (1, 100, 'admin', '系统管理员', '00', 'huacai@163.com', '15888888888', '1', '/profile/avatar/2026/03/29/微信图片_2026-03-29_184609_372_20260329195340A001.jpg', 'admin123', '0', '0', '0', '127.0.0.1', '2026-04-28 18:06:20', 'admin', '2025-08-30 08:59:53', '', '2026-04-28 18:06:20', '管理员');
+INSERT INTO `sys_user` VALUES (2, NULL, 'zhangsan', '张三', '00', 'zhangsan@example.com', '13800138001', '0', '/profile/avatar/2026/03/29/微信图片_2026-03-29_184609_372_20260329184717A001.jpg', 'user123', '0', '1', '0', '127.0.0.1', '2026-04-28 18:06:11', 'admin', '2025-03-20 00:00:00', NULL, '2026-04-28 18:06:10', '普通用户');
+INSERT INTO `sys_user` VALUES (3, NULL, 'lisi', '李四', '00', 'lisi@example.com', '13800138002', '1', '', 'user123', '0', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
+INSERT INTO `sys_user` VALUES (4, NULL, 'wangwu', '王五', '00', 'wangwu@example.com', '13800138003', '0', '', 'user123', '0', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
+INSERT INTO `sys_user` VALUES (5, NULL, 'zhaoliu', '赵六', '00', 'zhaoliu@example.com', '13800138004', '0', '', 'user123', '0', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
+INSERT INTO `sys_user` VALUES (6, NULL, 'qianqi', '钱七', '00', 'qianqi@example.com', '13800138005', '1', '', 'user123', '0', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
+INSERT INTO `sys_user` VALUES (7, NULL, 'sunba', '孙八', '00', 'sunba@example.com', '13800138006', '0', '', 'user123', '0', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
+
 -- ----------------------------
--- Records of sys_user
+-- Table structure for sys_user_post
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 100, 'admin', '系统管理员', '00', 'huacai@163.com', '15888888888', '1', '/profile/avatar/2026/03/29/微信图片_2026-03-29_184609_372_20260329195340A001.jpg', 'admin123', '0', '0', '127.0.0.1', '2026-04-28 18:06:20', 'admin', '2025-08-30 08:59:53', '', '2026-04-28 18:06:20', '管理员');
-INSERT INTO `sys_user` VALUES (2, NULL, 'zhangsan', '张三', '00', 'zhangsan@example.com', '13800138001', '0', '/profile/avatar/2026/03/29/微信图片_2026-03-29_184609_372_20260329184717A001.jpg', 'user123', '0', '0', '127.0.0.1', '2026-04-28 18:06:11', 'admin', '2025-03-20 00:00:00', NULL, '2026-04-28 18:06:10', '普通用户');
-INSERT INTO `sys_user` VALUES (3, NULL, 'lisi', '李四', '00', 'lisi@example.com', '13800138002', '1', '', 'user123', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
-INSERT INTO `sys_user` VALUES (4, NULL, 'wangwu', '王五', '00', 'wangwu@example.com', '13800138003', '0', '', 'user123', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
-INSERT INTO `sys_user` VALUES (5, NULL, 'zhaoliu', '赵六', '00', 'zhaoliu@example.com', '13800138004', '0', '', 'user123', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
-INSERT INTO `sys_user` VALUES (6, NULL, 'qianqi', '钱七', '00', 'qianqi@example.com', '13800138005', '1', '', 'user123', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
-INSERT INTO `sys_user` VALUES (7, NULL, 'sunba', '孙八', '00', 'sunba@example.com', '13800138006', '0', '', 'user123', '0', '0', '', NULL, 'admin', '2025-03-20 00:00:00', NULL, NULL, '普通用户');
+DROP TABLE IF EXISTS `sys_user_post`;
+CREATE TABLE `sys_user_post`  (
+  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `post_id` bigint NOT NULL COMMENT '岗位ID',
+  PRIMARY KEY (`user_id`, `post_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '用户与岗位关联表' ROW_FORMAT = DYNAMIC;
+
+INSERT INTO `sys_user_post` VALUES (1, 1);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -583,9 +592,6 @@ CREATE TABLE `sys_user_role`  (
   PRIMARY KEY (`user_id`, `role_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '用户和角色关联表' ROW_FORMAT = DYNAMIC;
 
--- ----------------------------
--- Records of sys_user_role
--- ----------------------------
 INSERT INTO `sys_user_role` VALUES (1, 1);
 INSERT INTO `sys_user_role` VALUES (2, 1);
 INSERT INTO `sys_user_role` VALUES (3, 1);
@@ -595,25 +601,19 @@ INSERT INTO `sys_user_role` VALUES (6, 1);
 INSERT INTO `sys_user_role` VALUES (7, 1);
 
 -- ----------------------------
--- Table structure for comment
+-- Table structure for ich_comment
 -- ----------------------------
-DROP TABLE IF EXISTS `comment`;
-CREATE TABLE `comment`  (
-  `comment_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '评论ID',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL COMMENT '评论内容',
-  `target_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '目标ID',
-  `target_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '目标类型(heritage/news)',
+DROP TABLE IF EXISTS `ich_comment`;
+CREATE TABLE `ich_comment`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '评论内容',
   `user_id` bigint NULL DEFAULT NULL COMMENT '评论用户ID',
+  `target_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '关联的非遗/新闻ID',
+  `type` tinyint NULL DEFAULT NULL COMMENT '类型：1=非遗 2=新闻',
   `nick_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '用户昵称',
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '用户头像',
-  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
-  `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`comment_id`) USING BTREE,
-  INDEX `idx_target_id`(`target_id`) USING BTREE,
-  INDEX `idx_target_type`(`target_type`) USING BTREE
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_target`(`target_id`, `type`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '评论表' ROW_FORMAT = DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -20,6 +20,8 @@ import java.io.InputStream;
 import org.springframework.web.multipart.MultipartFile;
 import com.fast.ich.domain.Heritage;
 import com.fast.ich.service.IHeritageService;
+import com.fast.system.domain.SysUser;
+import com.fast.system.service.ISysUserService;
 import com.fast.system.general.utils.poi.ExcelUtil;
 import com.fast.system.general.core.page.TableDataInfo;
 
@@ -34,6 +36,9 @@ import com.fast.system.general.core.page.TableDataInfo;
 public class HeritageController extends BaseController {
     @Autowired
     private IHeritageService heritageService;
+
+    @Autowired
+    private ISysUserService sysUserService;
 
     /**
      * 查询非遗项目列表
@@ -107,6 +112,28 @@ public class HeritageController extends BaseController {
     @DeleteMapping("/{heritageIds}")
     public AjaxResult remove(@PathVariable String[] heritageIds) {
         return toAjax(heritageService.deleteHeritageByHeritageIds(heritageIds));
+    }
+
+    /**
+     * 审核非遗项目
+     */
+    @PutMapping("/audit")
+    public AjaxResult audit(@RequestBody Heritage heritage) {
+        Heritage existing = heritageService.selectHeritageByHeritageId(heritage.getHeritageId());
+        if (existing == null) {
+            return error("项目不存在");
+        }
+        if (!"1".equals(existing.getHeritageStatus())) {
+            return error("仅允许审核待审核状态的项目");
+        }
+        heritageService.updateHeritage(heritage);
+        if ("2".equals(heritage.getHeritageStatus()) && existing.getHeritageOwnerId() != null) {
+            SysUser user = new SysUser();
+            user.setUserId(existing.getHeritageOwnerId());
+            user.setAccountType("1");
+            sysUserService.updateUser(user);
+        }
+        return success();
     }
 
     /**

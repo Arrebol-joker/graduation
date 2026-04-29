@@ -158,4 +158,9 @@ public class HeritageServiceImpl implements IHeritageService
     public List<PieVO> selectCategoryChart() {
         return heritageMapper.selectCategoryChart();
     }
+
+    @Override
+    public List<PieVO> selectStatusChart() {
+        return heritageMapper.selectStatusChart();
+    }
 }

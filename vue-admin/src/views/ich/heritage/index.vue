@@ -110,16 +110,22 @@
           <el-tag v-if="scope.row.status === '良好'" type="success">{{scope.row.status}}</el-tag>
           <el-tag v-if="scope.row.status === '一般'" type="warning">{{scope.row.status}}</el-tag>
           <el-tag v-if="scope.row.status === '濒危'" type="danger">{{scope.row.status}}</el-tag>
-
         </template>
-
-
+      </el-table-column>
+      <el-table-column label="申报状态" align="center" prop="heritageStatus" width="110">
+        <template #default="scope">
+          <el-tag v-if="scope.row.heritageStatus === '1'" type="warning">待审核</el-tag>
+          <el-tag v-else-if="scope.row.heritageStatus === '2'" type="success">已通过</el-tag>
+          <el-tag v-else-if="scope.row.heritageStatus === '3'" type="danger">已驳回</el-tag>
+          <el-tag v-else type="info">{{ scope.row.heritageStatus === '0' ? '待申报' : '—' }}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
           <el-button link type="primary" icon="ChatDotRound" @click="handleComment(scope.row)">评论</el-button>
+          <el-button v-if="scope.row.heritageStatus === '1'" link type="warning" icon="Select" @click="handleAudit(scope.row)">审核</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -229,38 +235,44 @@
     </vxe-modal>
 
     <vxe-modal title="评论管理" v-model="commentOpen" width="60%" show-maximize showFooter resize>
-      <div style="margin-bottom: 20px;">
+      <div style="display: flex; margin-bottom: 15px; gap: 10px;">
         <el-input
-            v-model="commentContent"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入评论内容"
+            v-model="commentSearchContent"
+            placeholder="搜索评论内容"
+            clearable
+            style="flex: 1;"
+            @keyup.enter="handleSearchComment"
         />
-        <el-button type="primary" style="margin-top: 10px;" @click="submitComment">发表评论</el-button>
+        <el-button type="primary" icon="Search" @click="handleSearchComment">搜索</el-button>
+        <el-button icon="Refresh" @click="resetCommentSearch">重置</el-button>
       </div>
       <el-divider/>
       <div v-if="commentList.length === 0" style="text-align: center; color: #999; padding: 20px;">
-        暂无评论，快来发表第一条评论吧！
+        暂无评论
       </div>
       <div v-for="(item, index) in commentList" :key="index" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
         <div style="display: flex; align-items: center; margin-bottom: 8px;">
-          <el-avatar :size="36" :src="item.avatar" style="margin-right: 10px;">
+          <el-avatar :size="36" style="margin-right: 10px;">
             <span>{{ item.nickName ? item.nickName.charAt(0) : '用' }}</span>
           </el-avatar>
           <div>
             <div style="font-weight: bold; font-size: 14px;">{{ item.nickName || '匿名用户' }}</div>
             <div style="font-size: 12px; color: #999;">{{ item.createTime }}</div>
           </div>
-          <el-button
-              link
-              type="danger"
-              icon="Delete"
-              style="margin-left: auto;"
-              @click="handleDeleteComment(item)"
-          >删除</el-button>
+          <div style="margin-left: auto;">
+            <el-button link type="primary" icon="Edit" @click="handleEditComment(item)">修改</el-button>
+            <el-button link type="danger" icon="Delete" @click="handleDeleteComment(item)">删除</el-button>
+          </div>
         </div>
         <div style="padding-left: 46px; font-size: 14px; line-height: 1.6;">{{ item.content }}</div>
       </div>
+      <pagination
+          v-show="commentTotal > 0"
+          :total="commentTotal"
+          v-model:page="commentPageNum"
+          v-model:limit="commentPageSize"
+          @pagination="getCommentList"
+      />
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="commentOpen = false">关 闭</el-button>
@@ -268,12 +280,41 @@
       </template>
     </vxe-modal>
 
+    <el-dialog title="修改评论" v-model="editDialogOpen" width="500px" append-to-body>
+      <el-input
+          v-model="editContent"
+          type="textarea"
+          :rows="4"
+          placeholder="请输入评论内容"
+      />
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitEditComment">确 定</el-button>
+          <el-button @click="editDialogOpen = false">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog title="审核非遗项目" v-model="auditDialogOpen" width="400px" append-to-body>
+      <div style="text-align: center; margin-bottom: 20px;">
+        <p style="font-size: 16px; margin-bottom: 10px;">项目名称：<strong>{{ auditRow?.title }}</strong></p>
+        <p style="color: #999;">确认该非遗项目申报是否通过审核？</p>
+      </div>
+      <template #footer>
+        <div class="dialog-footer" style="display: flex; justify-content: center; gap: 16px;">
+          <el-button type="success" icon="Check" @click="submitAudit('2')" :loading="auditLoading">审核通过</el-button>
+          <el-button type="danger" icon="Close" @click="submitAudit('3')" :loading="auditLoading">驳回</el-button>
+          <el-button @click="auditDialogOpen = false">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
 <script setup name="Heritage">
-import {listHeritage, getHeritage, delHeritage, addHeritage, updateHeritage} from "@/api/ich/heritage"
-import {getCommentsByTargetId, addComment, delComment} from "@/api/ich/comment"
+import {listHeritage, getHeritage, delHeritage, addHeritage, updateHeritage, auditHeritage} from "@/api/ich/heritage"
+import {adminPageComment, adminUpdateComment, adminDelComment} from "@/api/ich/comment"
 import {getToken} from "@/utils/auth.js";
 
 const baseURL = import.meta.env.VITE_APP_BASE_API
@@ -293,8 +334,17 @@ const selectedRow = ref(null)
 
 const commentOpen = ref(false)
 const commentList = ref([])
-const commentContent = ref("")
+const commentSearchContent = ref("")
+const commentTotal = ref(0)
+const commentPageNum = ref(1)
+const commentPageSize = ref(10)
 const currentTargetId = ref("")
+const editingComment = ref(null)
+const editContent = ref("")
+const editDialogOpen = ref(false)
+const auditDialogOpen = ref(false)
+const auditRow = ref(null)
+const auditLoading = ref(false)
 
 const data = reactive({
   form: {},
@@ -383,42 +433,90 @@ const indexMethod = (index) => {
 /** 评论按钮操作 */
 const handleComment = (row) => {
   currentTargetId.value = row.heritageId
-  commentContent.value = ""
+  commentSearchContent.value = ""
+  commentPageNum.value = 1
   commentOpen.value = true
-  getCommentsByTargetId(row.heritageId).then(response => {
-    commentList.value = response.data
+  getCommentList()
+}
+
+/** 获取评论列表 */
+const getCommentList = () => {
+  adminPageComment({
+    pageNum: commentPageNum.value,
+    pageSize: commentPageSize.value,
+    targetId: currentTargetId.value,
+    type: 1,
+    content: commentSearchContent.value || null
+  }).then(response => {
+    commentList.value = response.rows
+    commentTotal.value = response.total
   })
 }
 
-/** 提交评论 */
-const submitComment = () => {
-  if (!commentContent.value || !commentContent.value.trim()) {
-    proxy.$modal.msgWarning("请输入评论内容")
+/** 搜索评论 */
+const handleSearchComment = () => {
+  commentPageNum.value = 1
+  getCommentList()
+}
+
+/** 重置搜索 */
+const resetCommentSearch = () => {
+  commentSearchContent.value = ""
+  handleSearchComment()
+}
+
+/** 修改评论 */
+const handleEditComment = (item) => {
+  editingComment.value = item
+  editContent.value = item.content
+  editDialogOpen.value = true
+}
+
+/** 提交修改 */
+const submitEditComment = () => {
+  if (!editContent.value || !editContent.value.trim()) {
+    proxy.$modal.msgWarning("评论内容不能为空")
     return
   }
-  addComment({
-    content: commentContent.value,
-    targetId: currentTargetId.value,
-    targetType: "heritage"
+  adminUpdateComment({
+    id: editingComment.value.id,
+    content: editContent.value
   }).then(() => {
-    proxy.$modal.msgSuccess("评论成功")
-    commentContent.value = ""
-    getCommentsByTargetId(currentTargetId.value).then(response => {
-      commentList.value = response.data
-    })
+    proxy.$modal.msgSuccess("修改成功")
+    editDialogOpen.value = false
+    getCommentList()
   })
 }
 
 /** 删除评论 */
 const handleDeleteComment = (item) => {
   proxy.$modal.confirm('是否确认删除该评论？').then(function () {
-    return delComment(item.commentId)
+    return adminDelComment(item.id)
   }).then(() => {
-    getCommentsByTargetId(currentTargetId.value).then(response => {
-      commentList.value = response.data
-    })
+    getCommentList()
     proxy.$modal.msgSuccess("删除成功")
+  }).catch(() => {})
+}
+
+/** 审核按钮操作 */
+const handleAudit = (row) => {
+  auditRow.value = row
+  auditDialogOpen.value = true
+}
+
+/** 提交审核 */
+const submitAudit = (status) => {
+  auditLoading.value = true
+  auditHeritage({
+    heritageId: auditRow.value.heritageId,
+    heritageStatus: status
+  }).then(() => {
+    proxy.$modal.msgSuccess(status === '2' ? '审核通过，用户已升级为传承人' : '已驳回')
+    auditDialogOpen.value = false
+    auditLoading.value = false
+    getList()
   }).catch(() => {
+    auditLoading.value = false
   })
 }
 

@@ -23,3 +23,11 @@ export function selectPieData() {
         method: 'get'
     })
 }
+
+// 查询传承状态分布饼图数据
+export function selectStatusPieData() {
+    return request({
+        url: '/home/page/selectStatusPieData',
+        method: 'get'
+    })
+}

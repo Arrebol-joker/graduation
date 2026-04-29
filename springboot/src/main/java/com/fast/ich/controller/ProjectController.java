@@ -22,6 +22,8 @@ import com.fast.ich.domain.Project;
 import com.fast.ich.domain.Heritage;
 import com.fast.ich.service.IProjectService;
 import com.fast.ich.service.IHeritageService;
+import com.fast.system.domain.SysUser;
+import com.fast.system.service.ISysUserService;
 import com.fast.system.general.utils.poi.ExcelUtil;
 import com.fast.system.general.core.page.TableDataInfo;
 
@@ -39,6 +41,9 @@ public class ProjectController extends BaseController {
 
     @Autowired
     private IHeritageService heritageService;
+
+    @Autowired
+    private ISysUserService sysUserService;
 
     /**
      * 查询项目申报列表
@@ -142,8 +147,19 @@ public class ProjectController extends BaseController {
                 heritage.setLocation("未知"); // 所在地，默认值
                 heritage.setCategory(fullProject.getCategoryName()); // 类别
                 heritage.setStatus("传承中"); // 传承状态，默认值
+                heritage.setHeritageStatus("2");
+                heritage.setHeritageOwnerId(fullProject.getUserId());
 
                 heritageService.insertHeritage(heritage);
+            }
+
+            // 将申报用户升级为传承人（无论heritage是否已存在，都要执行）
+            Project fullProject = projectService.selectProjectByProjectId(projectId);
+            if (fullProject != null && fullProject.getUserId() != null) {
+                SysUser sysUser = new SysUser();
+                sysUser.setUserId(fullProject.getUserId());
+                sysUser.setAccountType("1");
+                sysUserService.updateUser(sysUser);
             }
         }
 

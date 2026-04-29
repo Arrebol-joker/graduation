@@ -28,11 +28,23 @@
                 </el-icon>
                 新闻资讯
               </el-menu-item>
-              <el-menu-item index="/index/projects">
+              <el-menu-item index="/index/event">
+                <el-icon>
+                  <Calendar/>
+                </el-icon>
+                活动预告
+              </el-menu-item>
+              <el-menu-item v-if="userType !== '1'" index="/index/projects">
                 <el-icon>
                   <FolderAdd/>
                 </el-icon>
                 项目申报
+              </el-menu-item>
+              <el-menu-item v-if="userType === '1'" index="/index/heritageManage">
+                <el-icon>
+                  <Collection/>
+                </el-icon>
+                非遗项目管理
               </el-menu-item>
               <el-menu-item index="/index/master">
                 <el-icon>
@@ -70,11 +82,12 @@
                 </div>
               </div>
               <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>
-                    <el-button type="text" style="text-decoration: none" @click.native="logout">
-                      退出
-                    </el-button>
+                <el-dropdown-menu class="custom-dropdown-menu">
+                  <el-dropdown-item @click="logout" class="logout-item">
+                    <el-icon :size="18" class="logout-icon">
+                      <SwitchButton />
+                    </el-icon>
+                    <span class="logout-text">退出登录</span>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -91,12 +104,12 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted} from 'vue'
+import {ref, computed, onMounted, onUnmounted, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {getUser} from "@/api/system/user"
 import useUserStore from "@/store/modules/user.js";
 import {ElMessageBox} from "element-plus";
-import {Collection, Document, FolderAdd, HomeFilled, InfoFilled, User, UserFilled} from "@element-plus/icons-vue";
+import {Calendar, Collection, Document, FolderAdd, HomeFilled, InfoFilled, User, UserFilled, SwitchButton} from "@element-plus/icons-vue";
 const userStore = useUserStore()
 const route = useRoute()
 const router = useRouter()
@@ -104,17 +117,40 @@ const router = useRouter()
 const nickName = ref(null)
 const top = ref('')
 const title = ref(route.query.title)
+const userType = ref(null)
 
 const avatar = computed(() => userStore.avatar)
 
+const refreshUserType = () => {
+  if (userStore.id) {
+    getUser(userStore.id).then(res => {
+      nickName.value = res.data.nickName
+      userType.value = res.data.accountType || '0'
+    })
+  }
+}
+
 onMounted(() => {
   getList()
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
+})
+
+const handleVisibilityChange = () => {
+  if (document.visibilityState === 'visible') {
+    refreshUserType()
+  }
+}
+
+watch(() => route.path, () => {
+  refreshUserType()
 })
 
 const getList = () => {
-  getUser(userStore.id).then(res => {
-    nickName.value = res.data.nickName
-  })
+  refreshUserType()
 }
 
 const logout = () => {
@@ -152,5 +188,42 @@ const logout = () => {
   width: 1em;
   height: 1em;
   vertical-align: middle;
+}
+
+:deep(.custom-dropdown-menu) {
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.logout-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  color: #F56C6C;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.logout-item:hover {
+  background-color: #fef0f0;
+  color: #F56C6C;
+  transform: scale(1.02);
+}
+
+.logout-icon {
+  margin-right: 8px;
+  transition: transform 0.3s ease;
+}
+
+.logout-item:hover .logout-icon {
+  transform: rotate(180deg);
+}
+
+.logout-text {
+  white-space: nowrap;
 }
 </style>
